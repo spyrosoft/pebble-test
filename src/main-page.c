@@ -1,16 +1,20 @@
 #include <pebble.h>
-//Testing
 
 Window *window;
 TextLayer *text_layer;
 
+int full_window_width = 144;
+int full_window_height = 154;
+
 void handle_init(void) {
 	// Create a window and text layer
 	window = window_create();
-	text_layer = text_layer_create(GRect(0, 0, 144, 154));
+	text_layer = text_layer_create(
+    GRect(0, 0, full_window_width, full_window_height)
+  );
 	
 	// Set the text, font, and text alignment
-	text_layer_set_text(text_layer, "Hi, I'm a Pebble!");
+	text_layer_set_text(text_layer, "My spoon is too big.");
 	text_layer_set_font(text_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
 	text_layer_set_text_alignment(text_layer, GTextAlignmentCenter);
 	
