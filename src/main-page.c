@@ -1,4 +1,5 @@
 #include <pebble.h>
+#include "storage.h"
 
 #define APP_RUN_COUNTER_PKEY 1
 
