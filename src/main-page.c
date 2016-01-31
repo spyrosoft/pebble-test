@@ -1,17 +1,21 @@
 #include <pebble.h>
 
+#define APP_RUN_COUNTER_PKEY 1
+
 static Window *s_main_window;
 static TextLayer *s_output_layer;
 
-static void up_click_handler(ClickRecognizerRef recognizer, void *context) {
+static void up_click_handler() {
   text_layer_set_text(s_output_layer, "Up pressed!");
 }
 
-static void select_click_handler(ClickRecognizerRef recognizer, void *context) {
-  text_layer_set_text(s_output_layer, "Select pressed!");
+static void select_click_handler() {
+	static char counter_display[3];
+	snprintf( counter_display, sizeof( counter_display ), "%u", (int) persist_read_int( APP_RUN_COUNTER_PKEY ) );
+  text_layer_set_text( s_output_layer, counter_display );
 }
 
-static void down_click_handler(ClickRecognizerRef recognizer, void *context) {
+static void down_click_handler() {
   text_layer_set_text(s_output_layer, "Down pressed!");
 }
 
@@ -39,6 +43,15 @@ static void main_window_unload(Window *window) {
   // Destroy Window's child Layers here
 }
 
+static void increment_app_run_counter(void) {
+	text_layer_set_text(s_output_layer, "Press a button.");
+	if ( persist_exists( APP_RUN_COUNTER_PKEY ) ) {
+		persist_write_int( APP_RUN_COUNTER_PKEY, persist_read_int( APP_RUN_COUNTER_PKEY ) + 1 );
+	} else {
+		persist_write_int( APP_RUN_COUNTER_PKEY, 1 );
+	}
+}
+
 static void init() {
   s_main_window = window_create();
   window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -49,6 +62,8 @@ static void init() {
   window_set_click_config_provider(s_main_window, click_config_provider);
   
   window_stack_push(s_main_window, true);
+	
+	increment_app_run_counter();
 }
 
 static void deinit() {
